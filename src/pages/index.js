@@ -34,17 +34,19 @@ export const Index = () => {
     const [pokemonData, setPokemonData] = useState({})
     const [open, setOpen] = useState(false);
 
-    const handleOpen = () => {
+    const handleOpen = (id) => {
+      getPokemonData(id + 1)
+      console.log(pokemonData)
       setOpen(true);
     };
     
     const handleClose = () => {
+      setPokemonData({})
       setOpen(false);
-
     };
     
     function getPokemons() {
-      axios.get("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1200")
+      axios.get("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151")
       .then(response => {
        setPokemons(response.data?.results)
       })
@@ -56,7 +58,7 @@ export const Index = () => {
     function getPokemonData(id){
       axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then(response => {
-        console.log("a")
+        setPokemonData(response.data)
       })
       .catch(error => {
         console.log(error)
@@ -82,7 +84,7 @@ export const Index = () => {
                     title={_.startCase(_.toLower(item.name))}
                     actionIcon={
                         <Tooltip title={`Informações de ${_.startCase(_.toLower(item.name))}`}>
-                            <IconButton aria-label={`info about ${item.title}`} className={classes.icon} onClick={() => getPokemonData(index + 1)}>
+                            <IconButton aria-label={`info about ${item.title}`} className={classes.icon} onClick={() => handleOpen(index)}>
                                 <FaInfoCircle />
                             </IconButton>
                         </Tooltip>
@@ -91,7 +93,7 @@ export const Index = () => {
                 </ImageListItem>
                 ))}
             </ImageList>
-            <PokeModal handleClose={handleClose} handleOpen={handleOpen} open={open}/>
+            <PokeModal handleClose={handleClose} handleOpen={handleOpen} open={open} pokemonData={pokemonData}/>
         </div>
     );
 }
