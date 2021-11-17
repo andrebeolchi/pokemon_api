@@ -6,6 +6,7 @@ import { IconButton, ImageList, ImageListItem, ImageListItemBar, ListSubheader, 
 import {FaInfoCircle} from 'react-icons/fa'
 import Logo from '../assets/images/Logo.png'
 import PokeModal from '../components/PokeModal/PokeModal';
+import _ from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,48 +29,60 @@ const useStyles = makeStyles((theme) => ({
 
 export const Index = () => {
     const classes = useStyles();
-    const [itemData, setItemData] = useState([])
+    const [pokemons, setPokemons] = useState([])
+    const [newPokemons, setNewPokemons] = useState([])
+    const [pokemonData, setPokemonData] = useState({})
     const [open, setOpen] = useState(false);
 
-    const handleOpen = (id) => {
+    const handleOpen = () => {
       setOpen(true);
-      const { data } = axios.get(`https://pokeapi.co/api/v2/${id}`)  
     };
     
     const handleClose = () => {
       setOpen(false);
-    };
 
-    function capitalize(word) {
-        const lower = word.toLowerCase();
-        return word.charAt(0).toUpperCase() + lower.slice(1);
-    }
+    };
     
-    function getPokemons(){
-      axios.get("https://pokeapi.co/api/v2/pokemon?limit=1200&offset=0")
-      .then((response) => {
-          setItemData(response.data?.results)
+    function getPokemons() {
+      axios.get("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1200")
+      .then(response => {
+       setPokemons(response.data?.results)
       })
-      .catch((error) => {console.log(error)})
+      .catch(error => {
+        console.log(error)
+      })
+    }
+
+    function getPokemonData(id){
+      axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then(response => {
+        console.log("a")
+      })
+      .catch(error => {
+        console.log(error)
+      })
     }
 
     useEffect(() => {
-    }, [])
+      getPokemons()  
+    }, []);
+
 
     return (
-        <div className={classes.root}>
-            <img src={Logo} style={{width: '50%'}}/>
+      <div className={classes.root}>
+            {/* <img src={Logo} style={{width: '50%'}}/> */}
             <ImageList rowHeight={50} className={classes.imageList}>
                 <ImageListItem key="Subheader" cols={2} style={{ height: 'auto' }}>
                     <ListSubheader component="div">Pokémon</ListSubheader>
                 </ImageListItem>
-                {itemData?.map((item, index) => (
+                {pokemons?.map((item, index) => (
                 <ImageListItem key={index}>
+                  <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index+1}.png`} alt={item.title} style={{width: 'auto', height: '100%', margin: 'auto'}}/>
                     <ImageListItemBar
-                    title={capitalize(item.name)}
+                    title={_.startCase(_.toLower(item.name))}
                     actionIcon={
-                        <Tooltip title={`Informações de ${capitalize(item.name)}`}>
-                            <IconButton aria-label={`info about ${item.title}`} className={classes.icon} onClick={handleOpen(item.url)}>
+                        <Tooltip title={`Informações de ${_.startCase(_.toLower(item.name))}`}>
+                            <IconButton aria-label={`info about ${item.title}`} className={classes.icon} onClick={() => getPokemonData(index + 1)}>
                                 <FaInfoCircle />
                             </IconButton>
                         </Tooltip>
