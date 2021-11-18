@@ -11,7 +11,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const tutorialSteps = [
+const pokeSteps = [
   {
     label: 'San Francisco – Oakland Bay Bridge, United States',
     imgPath:
@@ -40,12 +40,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Carousel = () => {
-    const [pokeSteps, setPokeSteps] = useState([])
+export const Carousel = (sprites) => {
     const classes = useStyles();
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
-    const maxSteps = tutorialSteps.length;
+    const maxSteps = pokeSteps.length;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -62,7 +61,7 @@ export const Carousel = () => {
   return (
     <div className={classes.root}>
       <Paper square elevation={0} className={classes.header}>
-        <Typography>{tutorialSteps[activeStep].label}</Typography>
+        <Typography>{pokeSteps[activeStep].label}</Typography>
       </Paper>
       <AutoPlaySwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -70,10 +69,10 @@ export const Carousel = () => {
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {tutorialSteps.map((step, index) => (
-          <div key={step.label}>
+        {Object.entries(sprites).map(([key, value], index) => (
+          <div key={key}>
             {Math.abs(activeStep - index) <= 2 ? (
-              <img className={classes.img} src={step.imgPath} alt={step.label} />
+              <img className={classes.img} src={value} alt={key} />
             ) : null}
           </div>
         ))}

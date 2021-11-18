@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import _ from 'lodash';
 import { Carousel } from '../utils/Carousel';
+import { Avatar } from '@material-ui/core';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -44,12 +45,29 @@ const PokeModal = ({open, handleClose, pokemonData}) => {
         aria-describedby="simple-modal-description"
       >
       <div style={modalStyle} className={classes.paper}>
-        {/* <Avatar alt={_.startCase(_.toLower(pokemonData.name))} src={pokemonData.sprites.other["official-artwork"].front_default} className={classes.large} />
+        <Avatar alt={_.startCase(_.toLower(pokemonData.name))} src={pokemonData.sprites?.other["official-artwork"]?.front_default} className={classes.large} />
         <h2 id="simple-modal-title">{_.startCase(_.toLower(pokemonData.name))}</h2>
+        <h3>Base Stats</h3>
         <p id="simple-modal-description">
-          {console.log(pokemonData)}a
-        </p> */}
-        <Carousel/>
+          {console.log(pokemonData)}
+          HP: {pokemonData.stats?.[0].base_stat}
+        </p>
+        <p id="simple-modal-description">
+          Attack: {pokemonData?.stats?.[1].base_stat}
+        </p>
+        <p id="simple-modal-description">
+          Defense: {pokemonData?.stats?.[2].base_stat}
+        </p>
+        <p id="simple-modal-description">
+          Special Attack: {pokemonData?.stats?.[3].base_stat}
+        </p>
+        <p id="simple-modal-description">
+          Special Defense: {pokemonData?.stats?.[4].base_stat}
+        </p>
+        <p id="simple-modal-description">
+          Speed: {pokemonData?.stats?.[5].base_stat}
+        </p>
+        {/* <Carousel sprites={pokemonData.sprites}/> */}
       </div>
       </Modal>
   );
